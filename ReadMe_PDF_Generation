@@ -1,0 +1,7 @@
+/*
+This is a description/ manual for PDF Generation Project codes.
+To use PDF Generation code, you need to prepare these files and folders:
+1. A Google form and its linked Google spreadsheet for form responses;
+2. The demo form in this code has one checkbox question.
+3. Trigger must be setup as spreadsheet > form submision.
+*/
