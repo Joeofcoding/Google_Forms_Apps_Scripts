@@ -24,7 +24,7 @@ var form = FormApp.openByUrl(url);
       
   body.appendParagraph('Choices are ');
   var table = body.appendTable();
-  var arrayprep = checkedboxes.toString();
+  var arrayprep = checkedBoxes.toString();
   var checkedboxesarray = arrayprep.split(".,");
   var lastindex = checkedboxesarray.length;
   for (i=0; i<lastindex; i++){
