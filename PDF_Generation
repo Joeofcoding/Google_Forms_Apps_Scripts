@@ -14,7 +14,7 @@ var form = FormApp.openByUrl(url);
   
   var doc = DocumentApp.create(formname);  
   var body = doc.getBody();
-  var para1 = body.appendParagraph('Survey form's name is ');
+  var para1 = body.appendParagraph('Survey form\'s name is ');
       para1.appendText(formname.toString());
       
   body.appendHorizontalRule();
