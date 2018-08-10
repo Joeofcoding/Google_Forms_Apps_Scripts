@@ -11,31 +11,18 @@ var form = FormApp.openByUrl(url);
   var formResponse = form.getResponses()[lastrow-2]; //This line of code makes sure only the latest response will be used to generate PDF.
   var timestamp = formResponse.getTimestamp();
   var checkedBoxes = formResponse.getItemResponses()[0].getResponse();
-  var listResponse = formResponse.getItemResponses()[1].getResponse();
-  var textsResponse = formResponse.getItemResponses()[2].getResponse();
-  var imgResponse = formResponse.getItemResponses()[3].getResponse(); 
-    var imgid = imgResponse.toString(); 
-    var blob = DriveApp.getFileById(imgid).getBlob();
-  
-   var linkStyle = {};
-     linkStyle[DocumentApp.Attribute.HORIZONTAL_ALIGNMENT] = DocumentApp.HorizontalAlignment.LEFT;
-     linkStyle[DocumentApp.Attribute.LINK_URL] = true;
-   var boldStyle = {};
-      boldStyle[DocumentApp.Attribute.BOLD] = true;
   
   var doc = DocumentApp.create(formname);  
   var body = doc.getBody();
-  var para1 = body.appendParagraph('Text1');
+  var para1 = body.appendParagraph('Survey form's name is ');
       para1.appendText(formname.toString());
-      para1.getChild(1).asText().setAttributes(boldStyle);
       
   body.appendHorizontalRule();
   
-  var para2 = body.appendParagraph('Text2');
+  var para2 = body.appendParagraph('Response submission time was ');
       para2.appendText(timestamp.toString());
-      para2.getChild(1).setAttributes(boldStyle);
       
-  body.appendParagraph('Text3');
+  body.appendParagraph('Choices are ');
   var table = body.appendTable();
   var arrayprep = checkedboxes.toString();
   var checkedboxesarray = arrayprep.split(".,");
@@ -44,26 +31,7 @@ var form = FormApp.openByUrl(url);
     var rows = table.appendTableRow()
     var cells = rows.appendTableCell(checkedboxesarray[i]);
        }
-  
-  body.appendParagraph('Text4'+textsResponse);
-  
- var para3 = body.appendParagraph('Text5A'+listResponse+'Text5B');
-  var textBeforebold = "Text5A";
-  var n = textBeforebold.length;
-  var boldedpart = nameResponse.toString().length;
-  para3.getChild(0).asText().setAttributes(n, boldedpart+n, boldStyle);
-  
-  var addimg = body.appendImage(blob);
-      addimg.setHeight('256');
-      addimg.setWidth('192');
-  
-  var parLink = body.appendParagraph('URL_display_text');
-  parLink.setAttributes(linkStyle);
-  parLink.setLinkUrl('URL_address');
-  var urlimg = DriveApp.getFileById('icon_image_Id');
-  var urlimgapp = parLink.insertInlineImage(0, urlimg);
-      urlimgapp.setHeight('32');
-      urlimgapp.setWidth('32');
+
   doc.saveAndClose();
   
   var docblob = doc.getAs('application/pdf');
