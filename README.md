@@ -1,2 +1,10 @@
-# Anywhere-Inventory
-Customized Inventory Management based on Google Apps Script and G-suite.
+# PDF Generation
+This is a description/ manual for PDF Generation Project codes.
+This project is based on Google Apps Script.
+
+# Installation
+1. Make sure your survey form is linked with a Google spreadsheet by going to "Responses" and "select response destination."
+2. Go to your linked spreadsheet, open the script editor panel by going through menu bar's "Tools" > "<> Script editor."
+3. Copy the code and paste it into the editor window, replace the default "function myFunction(){}" lines.
+4. Setup trigger: in the script editor, go to menu bar "Edit" > "Current Project's Triggers" to setup a new trigger.
+5. Remember to save your code before exit the script editor.
