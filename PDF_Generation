@@ -1,5 +1,6 @@
 //This function is bond to a trigger. The trigger setting can be found at menu > "Edit" > "Current project's triggers"
 //The trigger-bond function will create a Google doc report based on the newly submitted form response, then save the doc into a pdf.
+
 function genepdf() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var lastrow = sheet.getLastRow();
@@ -8,29 +9,33 @@ function genepdf() {
 var form = FormApp.openByUrl(url);
   var formname = DriveApp.getFileById(form.getId()).getName();
   var formResponse = form.getResponses()[lastrow-2]; //This line of code makes sure only the latest response will be used to generate PDF.
-  var imgResponse = formResponse.getItemResponses()[4].getResponse();
-  var checkedboxes = formResponse.getItemResponses()[0].getResponse();
   var timestamp = formResponse.getTimestamp();
-  var notesResponse = formResponse.getItemResponses()[3].getResponse();
-  var depResponse = formResponse.getItemResponses()[2].getResponse();
-  var nameResponse = formResponse.getItemResponses()[1].getResponse();
-  var imgid = imgResponse.toString(); 
-  var blob = DriveApp.getFileById(imgid).getBlob();
-  var doc = DocumentApp.create(formname);
-  var style = {};
-     style[DocumentApp.Attribute.HORIZONTAL_ALIGNMENT] = DocumentApp.HorizontalAlignment.LEFT;
-     style[DocumentApp.Attribute.LINK_URL] = true;
-  var stylebold = {};
-      stylebold[DocumentApp.Attribute.BOLD] = true;
+  var checkedBoxes = formResponse.getItemResponses()[0].getResponse();
+  var listResponse = formResponse.getItemResponses()[1].getResponse();
+  var textsResponse = formResponse.getItemResponses()[2].getResponse();
+  var imgResponse = formResponse.getItemResponses()[3].getResponse(); 
+    var imgid = imgResponse.toString(); 
+    var blob = DriveApp.getFileById(imgid).getBlob();
+  
+   var linkStyle = {};
+     linkStyle[DocumentApp.Attribute.HORIZONTAL_ALIGNMENT] = DocumentApp.HorizontalAlignment.LEFT;
+     linkStyle[DocumentApp.Attribute.LINK_URL] = true;
+   var boldStyle = {};
+      boldStyle[DocumentApp.Attribute.BOLD] = true;
+  
+  var doc = DocumentApp.create(formname);  
   var body = doc.getBody();
-  var para1 = body.appendParagraph('Item Delivery Proof for: ');
-  para1.appendText(formname.toString());
-  para1.getChild(1).asText().setAttributes(stylebold);
+  var para1 = body.appendParagraph('Text1');
+      para1.appendText(formname.toString());
+      para1.getChild(1).asText().setAttributes(boldStyle);
+      
   body.appendHorizontalRule();
-  var para2 = body.appendParagraph('Delivery time was: ');
-  para2.appendText(timestamp.toString());
-  para2.getChild(1).setAttributes(stylebold);
-  body.appendParagraph('Items Delivered:');
+  
+  var para2 = body.appendParagraph('Text2');
+      para2.appendText(timestamp.toString());
+      para2.getChild(1).setAttributes(boldStyle);
+      
+  body.appendParagraph('Text3');
   var table = body.appendTable();
   var arrayprep = checkedboxes.toString();
   var checkedboxesarray = arrayprep.split(".,");
@@ -39,27 +44,21 @@ var form = FormApp.openByUrl(url);
     var rows = table.appendTableRow()
     var cells = rows.appendTableCell(checkedboxesarray[i]);
        }
-  var para3 = body.appendParagraph('Destination: ');
-  para3.appendText(depResponse.toString());
-  para3.getChild(1).setAttributes(stylebold);
-  body.appendParagraph('Notes---'+notesResponse);
-  var para4 = body.appendParagraph('Signed by: '+nameResponse+' and captured a signature/photo:');
-  var stylept4 = nameResponse.toString().length;
-  para4.getChild(0).asText().setAttributes(11, stylept4+11, stylebold);
-  var sigimgtype = DriveApp.getFileById(imgid).getMimeType();
+  
+  body.appendParagraph('Text4'+textsResponse);
+  
+ var para3 = body.appendParagraph('Text5A'+listResponse+'Text5B');
+  var textBeforebold = "Text5A";
+  var n = textBeforebold.length;
+  var boldedpart = nameResponse.toString().length;
+  para3.getChild(0).asText().setAttributes(n, boldedpart+n, boldStyle);
+  
   var addimg = body.appendImage(blob);
-
- if(sigimgtype == "image/jpeg"){
-   addimg.setHeight('256');
-   addimg.setWidth('192');
-  }
-   else if (sigimgtype == "image/png") {
-   addimg.setHeight('92');
-   addimg.setWidth('265');
-  } 
- 
+      addimg.setHeight('256');
+      addimg.setWidth('192');
+  
   var parLink = body.appendParagraph('URL_display_text');
-  parLink.setAttributes(style);
+  parLink.setAttributes(linkStyle);
   parLink.setLinkUrl('URL_address');
   var urlimg = DriveApp.getFileById('icon_image_Id');
   var urlimgapp = parLink.insertInlineImage(0, urlimg);
@@ -77,13 +76,6 @@ var form = FormApp.openByUrl(url);
   var filepdf = DriveApp.getFileById(pdfid);
   var folder = DriveApp.getFileById(form.getId()).getParents().next();
   folder.addFile(filepdf);
-
-//  var namestr =  formname.toString();
-//  var strlength = namestr.search("_");
-//  var folderName = namestr.slice(6, strlength);
-//  var folderSearch = DriveApp.getFolderById('1Hb6h0oauRvwhCB93LLkaNzqvAgXop2JB').getFoldersByName(folderName).next().addFile(filepdf);
-
-// DriveApp.getFolderById('1e5aEhQhwdy5HUxP0C8KE6ivGlCXhNdjk').addFile(filepdf);
 DriveApp.getRootFolder().removeFile(filedoc);
 DriveApp.getRootFolder().removeFile(filepdf);
 }
