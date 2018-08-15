@@ -1,5 +1,6 @@
 # PDF Generation
 This is a description/ manual for PDF Generation Project codes.
+By default, this project is working for checkbox questions.
 This project is based on Google Apps Script.
 
 # Installation
