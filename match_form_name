@@ -1,0 +1,40 @@
+function onOpen() {
+  SpreadsheetApp.getUi()
+      .createMenu('New Menu')
+      .addItem('Match Form Name', 'reNamesheet')
+      .addToUi();
+}
+function reNamesheet() {
+  var ss = SpreadsheetApp.getActive();
+  var sheet = ss.getActiveSheet();
+  var url = sheet.getFormUrl();
+  if (url != null) {
+  var form = FormApp.openByUrl(url);
+  var formname = DriveApp.getFileById(form.getId()).getName();
+  var newName = formname;
+  var sheetid = sheet.getSheetId();
+  var verify = ss.getSheetByName(newName);
+  if (verify == null){
+    ss.renameActiveSheet(newName);
+    }
+  else if (verify != null) {
+  var ui = SpreadsheetApp.getUi();
+  var result = ui.prompt('Type what you want to add to the name:', ui.ButtonSet.OK_CANCEL);
+  var button = result.getSelectedButton();
+  var text = result.getResponseText();
+  if (button == ui.Button.OK) {
+  var verifyNewname = ss.getSheetByName(newName + text);
+  if (verifyNewname == null) {
+      ui.alert('Your input is ' + text + '.');
+      ss.renameActiveSheet(newName + text);}
+    else if (verifyNewname != null) {
+    ui.alert('Name ' + newName + text + ' is already used.');
+      }
+     }
+    }
+  }
+  else if (url == null) {
+  var ui2 = SpreadsheetApp.getUi();
+  var response = ui2.alert('Sheet is not linked to any form!', ui2.ButtonSet.OK);
+  }
+}
